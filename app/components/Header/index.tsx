@@ -1,7 +1,12 @@
 "use client";
 
-import { Heading, IconButton, Stack, useColorMode } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import {
+	Heading,
+	IconButton,
+	Stack,
+	useColorMode,
+} from "@/app/components/ChakraWrappers/React";
+import { SunIcon, MoonIcon } from "@/app/components/ChakraWrappers/Icons";
 
 const Header = () => {
 	const { colorMode, toggleColorMode } = useColorMode();

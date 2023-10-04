@@ -7,6 +7,7 @@ import {
   Flex,
   Heading,
   Skeleton,
+  Text,
   useColorMode,
 } from "@/components/ChakraWrappers/React";
 import { useSession } from "next-auth/react";
@@ -20,29 +21,36 @@ const Home = () => {
   const { status } = useSession();
 
   return (
-    <Flex direction="column" py={20} px={20} justifyContent={"center"} gap={10}>
+    <Flex direction="column" py={20} px={40} justifyContent={"center"} gap={10}>
       <Flex flexDirection="row" justifyContent="space-between">
-        <Heading
-          w="60%"
-          fontSize="9xl"
-          fontFamily="body"
-          fontWeight="light"
-          color={colorMode === "dark" ? "whiteAlpha.900" : "blackAlpha.800"}
-          lineHeight={1.1}
-        >
-          Todos that{" "}
-          <Box
-            as="span"
-            color={colorMode === "dark" ? "teal.200" : "teal.400"}
-            fontFamily="heading"
-            fontWeight="semibold"
+        <Flex direction="column">
+          <Heading
+            w="70%"
+            fontSize="8xl"
+            fontFamily="body"
+            fontWeight="light"
+            color={colorMode === "dark" ? "whiteAlpha.900" : "blackAlpha.800"}
+            lineHeight={1.1}
           >
-            disappear
-          </Box>{" "}
-          over time.
-        </Heading>
+            Todos that{" "}
+            <Box
+              as="span"
+              color={colorMode === "dark" ? "teal.200" : "teal.400"}
+              fontFamily="heading"
+              fontWeight="semibold"
+            >
+              disappear
+            </Box>{" "}
+            over time!
+          </Heading>
+          {/* <Text fontSize="md">
+            {
+              "Imagine a to-do app that adapts to your changing priorities effortlessly. With tasks that vanish over time, this app keeps you engaged and focused on what's current. Say goodbye to task clutter, and hello to a streamlined and efficient way to manage your daily goals and commitments."
+            }
+          </Text> */}
+        </Flex>
 
-        <Flex w="30%" justifyContent="center">
+        <Flex w="40%" justifyContent="center">
           <Image src={todosImg} style={{ objectFit: "contain" }} alt="Todos list" />
         </Flex>
       </Flex>

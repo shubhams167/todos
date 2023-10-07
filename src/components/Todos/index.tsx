@@ -1,6 +1,6 @@
 import { Center, Stack, Text } from "@/components/ChakraWrappers/React";
 import Todo from "./Todo";
-import { db } from "@/lib/kysely";
+import { db, sql } from "@/lib/kysely";
 import { getServerSession } from "next-auth";
 
 const TodoList = async () => {
@@ -19,12 +19,13 @@ const TodoList = async () => {
       (join) => join.onRef("LoggedInUser.id", "=", "Todo.userId")
     )
     .select(["Todo.id", "title", "disappearAt", "createdAt"])
+    .where((eb) => eb("disappearAt", ">", sql`current_timestamp`).or("disappearAt", "is", null))
     .execute();
 
   return (
     <Stack mt={2}>
       {todos.map((todo) => (
-        <Todo key={todo.id} id={todo.id}>
+        <Todo key={todo.id} id={todo.id} disappearAt={todo.disappearAt}>
           {todo.title}
         </Todo>
       ))}

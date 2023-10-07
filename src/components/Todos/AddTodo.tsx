@@ -1,12 +1,26 @@
 "use client";
 
-import { Button, Flex, Input } from "@/components/ChakraWrappers/React";
+import { Button, Flex, Icon, Input, Select } from "@/components/ChakraWrappers/React";
 import { useRef } from "react";
 import { addTodo } from "@/lib/actions";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import { useToast } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
+import { BiTimer } from "react-icons/bi";
 import { useSession } from "next-auth/react";
+
+const disappearInOptions = [
+  { label: "1 min", value: 1 },
+  { label: "1 hr", value: 60 },
+  { label: "2 hrs", value: 120 },
+  { label: "4 hrs", value: 240 },
+  { label: "9 hrs", value: 540 },
+  { label: "12 hrs", value: 720 },
+  { label: "1 day", value: 1440 },
+  { label: "2 days", value: 2880 },
+  { label: "1 week", value: 10080 },
+  { label: "never", value: 0 },
+];
 
 const AddTodo = () => {
   const formRef = useRef<HTMLFormElement>();
@@ -33,23 +47,37 @@ const AddTodo = () => {
       }}
       ref={formRef}
     >
-      <Flex gap={4}>
+      <Flex gap={4} fontFamily="body">
         <Input
           id="title"
           name="title"
           type="text"
           size="lg"
-          fontWeight="medium"
-          fontFamily="body"
+          placeholder="What's on your mind today?"
           autoFocus
           required
-          placeholder="What's on your mind today?"
         />
+        <Select
+          id="disappearIn"
+          name="disappearIn"
+          size="lg"
+          maxW={"7%"}
+          defaultValue={720}
+          placeholder="Disappear in"
+          icon={<Icon as={BiTimer} fontSize={"2xl"} />}
+          required
+        >
+          {disappearInOptions.map((opt) => (
+            <option key={opt.label} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </Select>
         <Input
           id="userEmail"
           name="userEmail"
           type="hidden"
-          value={session?.user?.email}
+          value={session?.user?.email || "unknown"}
           required
         />
         <AddButton />

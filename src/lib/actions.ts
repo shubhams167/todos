@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { db } from "./kysely";
 import { z } from "zod";
+import moment from "moment";
 
 const addTodoSchema = z.object({
   title: z.string().min(1).max(100),
   userEmail: z.string().min(1).max(100).email(),
-  disappearAt: z.date(),
+  disappearIn: z.number().gte(0),
 });
 
 const deleteTodoSchema = z.object({
@@ -24,8 +25,12 @@ export const addTodo = async (data: FormData): Promise<ActionResponse> => {
     const parsedData = addTodoSchema.parse({
       title: data.get("title"),
       userEmail: data.get("userEmail"),
-      disappearAt: new Date(),
+      disappearIn: Number(data.get("disappearIn")),
     });
+
+    const disappearAt = !parsedData.disappearIn
+      ? null
+      : moment(new Date()).add(parsedData.disappearIn, "minutes").toDate();
 
     await db
       .insertInto("Todo")
@@ -36,7 +41,7 @@ export const addTodo = async (data: FormData): Promise<ActionResponse> => {
           .select((eb) => [
             eb.val(parsedData.title).as("title"),
             "User.id",
-            eb.val(parsedData.disappearAt).as("disappearAt"),
+            eb.val(disappearAt).as("disappearAt"),
           ])
           .where("User.email", "=", parsedData.userEmail)
       )
